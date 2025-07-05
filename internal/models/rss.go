@@ -1,8 +1,7 @@
-package rss
+package models
 
 import (
 	"encoding/xml"
-	"time"
 )
 
 // RSS Really Simple Syndication
@@ -12,21 +11,21 @@ type RSS struct {
 }
 
 type Channel struct {
-	Title          string     `xml:"title"`
-	Description    string     `xml:"description"`
-	Link           string     `xml:"link"`
-	Image          *Image     `xml:"image,omitempty"`
-	LastBuildDate  *time.Time `xml:"lastBuildDate,omitempty"`
-	Language       *string    `xml:"language,omitempty"`
-	Copyright      *string    `xml:"copyright,omitempty"`
-	ManagingEditor *string    `xml:"managingEditor,omitempty"`
-	WebMaster      *string    `xml:"webMaster,omitempty"`
-	PubDate        *time.Time `xml:"pubDate,omitempty"` // RFC 822
-	Docs           *string    `xml:"docs,omitempty"`
-	TTL            *int       `xml:"ttl,omitempty"`
-	Category       *string    `xml:"category,omitempty"`
-	Rating         any        `xml:"rating,omitempty"`
-	TextInput      TextInput  `xml:"textInput,omitempty"`
+	Title          string    `xml:"title"`
+	Description    string    `xml:"description"`
+	Link           string    `xml:"link"`
+	Image          *Image    `xml:"image,omitempty"`
+	LastBuildDate  *string   `xml:"lastBuildDate,omitempty"`
+	Language       *string   `xml:"language,omitempty"`
+	Copyright      *string   `xml:"copyright,omitempty"`
+	ManagingEditor *string   `xml:"managingEditor,omitempty"`
+	WebMaster      *string   `xml:"webMaster,omitempty"`
+	PubDate        *string   `xml:"pubDate,omitempty"` // RFC 822
+	Docs           *string   `xml:"docs,omitempty"`
+	TTL            *int      `xml:"ttl,omitempty"`
+	Category       *string   `xml:"category,omitempty"`
+	Rating         any       `xml:"rating,omitempty"`
+	TextInput      TextInput `xml:"textInput,omitempty"`
 	// A hint for aggregators telling them which hours/days they can skip
 	SkipHours any    `xml:"skipHours,omitempty"`
 	SkipDays  any    `xml:"skipDays,omitempty"`
@@ -42,9 +41,9 @@ type Item struct {
 	Category    []string `xml:"category,omitempty"`
 	Comments    *string  `xml:"comments,omitempty"`
 	// Describes a media obj that is attached to item
-	Enclosure Enclosure  `xml:"enclosure,omitempty"`
-	PubDate   *time.Time `xml:"pubDate,omitempty"`
-	Source    *string    `xml:"source,omitempty"`
+	Enclosure Enclosure `xml:"enclosure,omitempty"`
+	PubDate   *string   `xml:"pubDate,omitempty"`
+	Source    *string   `xml:"source,omitempty"`
 }
 
 type Enclosure struct {
