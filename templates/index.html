@@ -1,4 +1,4 @@
-{{ define "index" }}
+dsf{{ define "index" }}
 <!DOCTYPE html>
 <html lang="en" xml:lang="en">
 
@@ -6,12 +6,57 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="SwaggerUI" />
+  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js"
+    integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm"
+    crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <title>Go-Feeder</title>
 </head>
 
 <body>
-  <p>Hello world !!</p>
+  <h1 class="text-xl text-center p-2">Go-Feeder</h1>
+
+  <form hx-post="/feeds" hx-target="#feedRender" hx-swap="innerHTML" class="flex gap-3 justify-center">
+    <label id="srcLabel" for="url" class="input">
+      <span class="label">Feed-URL https://</span>
+      <input type="text" id="url" name="url" placeholder="URL" required>
+    </label>
+    <button class="btn btn-primary">Search</button>
+  </form>
+
+  <div class="divider">Feeds</div>
+
+  <div id="feedRender" class="flex flex-col bg-base-300 w-full p-3">
+  </div>
 </body>
 
 </html>
 {{ end }}
+
+{{block "image" .}}
+<img src="{{.URL}}" alt="{{.Title}}" width={{.Width}} height={{.Height}} />
+{{end}}
+
+{{block "feeds" .}}
+<div id="channel" class="">
+  <div class="font-semibold">{{template "image" .Channel.Image}} {{.Channel.Title}}</div>
+  <p>Build:{{.Channel.LastBuildDate}}</p>
+  <p id="chan-desc">{{.Channel.Description}}</p>
+  <br>
+  {{template "items" .Channel.Items}}
+</div>
+{{end}}
+
+{{block "items" .}}
+{{range $item, $key := .}}
+<div tabindex="0" class="collapse collapse-plus bg-base-100 border-base-300 border">
+  <div class="collapse-title font-semibold">{{.Title}} <p class="flex-end"> {{if .Author}} Author: {{.Author}} {{end}}
+    </p>
+  </div>
+  <div class="collapse-content text-sm">{{.Description}}
+    <a href="{{.Link}}" class="hover:hand underline">Read more</a>
+  </div>
+</div>
+{{end}}
+{{end}}
