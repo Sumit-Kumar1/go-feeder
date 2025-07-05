@@ -3,8 +3,8 @@ package cmd
 import (
 	"context"
 	"errors"
+	"fmt"
 	"io"
-	"log"
 	"log/slog"
 	"net/http"
 	"os"
@@ -21,7 +21,7 @@ func Run(ctx context.Context, w io.Writer, args []string) error {
 	ctx, cancel := signal.NotifyContext(ctx, os.Interrupt)
 	defer cancel()
 
-	logger := setupLogger(w)
+	logger := newLogger()
 	mux := http.NewServeMux()
 
 	addRoutes(mux, logger)
@@ -49,11 +49,11 @@ func Run(ctx context.Context, w io.Writer, args []string) error {
 	logger.LogAttrs(ctx, slog.LevelInfo, "got interruption signal")
 
 	if err := srv.Shutdown(context.TODO()); err != nil {
-		log.Printf("server shutdown returned an err: %v\n", err)
+		slog.LogAttrs(context.Background(), slog.LevelError, fmt.Sprintf("server shutdown returned an err: %v\n", err))
 		return err
 	}
 
-	log.Println("final")
+	slog.LogAttrs(context.Background(), slog.LevelInfo, "final")
 	return nil
 }
 
@@ -64,28 +64,4 @@ func getEnvOrDefault(key, defaultVal string) string {
 	}
 
 	return val
-}
-
-func setupLogger(w io.Writer) *slog.Logger {
-	var logLevel slog.Leveler
-
-	switch getEnvOrDefault("LOG_LEVEL", "INFO") {
-	case "DEBUG":
-		logLevel = slog.LevelDebug
-	case "WARN":
-		logLevel = slog.LevelWarn
-	case "ERROR":
-		logLevel = slog.LevelError
-	default:
-		logLevel = slog.LevelInfo
-	}
-
-	logger := slog.New(slog.NewJSONHandler(w, &slog.HandlerOptions{
-		AddSource: false,
-		Level:     logLevel,
-	}))
-
-	slog.SetDefault(logger)
-
-	return logger
 }

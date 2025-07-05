@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"feeder/cmd"
+	"go-feeder/cmd"
 )
 
 func main() {
